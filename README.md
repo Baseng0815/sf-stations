@@ -1,4 +1,4 @@
-# What is this for
+# What this is for
 
 Since I'm planning to tap as many resource nodes as possible and ship them by
 train, it is wise to find a set of train station coordinates that minimizes the
