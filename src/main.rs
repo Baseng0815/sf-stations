@@ -232,8 +232,9 @@ impl Frontend {
         let mut min: f32 = indices
             .iter()
             .map(|i| {
+                let factor = str_to_factor(self.markers[*i].purity.as_str());
                 ((self.markers[*i].x - median.x).powi(2) + (self.markers[*i].y - median.y).powi(2))
-                    .sqrt()
+                    .sqrt() * factor
             })
         .sum();
         let mut improved = false;
@@ -244,9 +245,10 @@ impl Frontend {
                 let d = indices
                     .iter()
                     .map(|i| {
+                        let factor = str_to_factor(self.markers[*i].purity.as_str());
                         ((self.markers[*i].x - median.x).powi(2)
                          + (self.markers[*i].y - median.y).powi(2))
-                            .sqrt()
+                            .sqrt() * factor
                     })
                 .sum();
                 if d < min {
@@ -277,7 +279,8 @@ impl Frontend {
                 let mut closest_distance = f32::MAX;
                 let mut closest_index = 0;
                 for (i, point) in self.points.iter().enumerate() {
-                    let distance = (*point - pos2(marker.x, marker.y)).length();
+                    let factor = str_to_factor(marker.purity.as_str());
+                    let distance = (*point - pos2(marker.x, marker.y)).length() * factor;
                     if distance < closest_distance {
                         closest_distance = distance;
                         closest_index = i;
@@ -322,6 +325,15 @@ impl Frontend {
 
             self.last_error =  total_error;
         }
+    }
+}
+
+fn str_to_factor(s: &str) -> f32 {
+    match s {
+        "impure" => 1.0,
+        "normal" => 2.0,
+        "pure" => 4.0,
+        _ => 1.0,
     }
 }
 
